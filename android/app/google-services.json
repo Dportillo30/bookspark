@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "752037417785",
+    "project_id": "social-book-app-b45cc",
+    "storage_bucket": "social-book-app-b45cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752037417785:android:6ce81f4f549a994ed64ee8",
+        "android_client_info": {
+          "package_name": "app.dportillo.bookspark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752037417785-nl8848mqeo4i89k3n7crpibk2911eme8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRsTJEZKQObbOeu1Xs5x5dfa_HJwW0JqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752037417785-nl8848mqeo4i89k3n7crpibk2911eme8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "752037417785-c9oj3sjui51kugtapne0lpj46hc7v41b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.dportillo.sparkbooks"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

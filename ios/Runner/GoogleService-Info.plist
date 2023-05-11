@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>752037417785-dc9ho6ge7khk7obigvh86ofaqo55kt0q.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.752037417785-dc9ho6ge7khk7obigvh86ofaqo55kt0q</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>752037417785-809tlo2jh56rmb9chf9ij33qrqcc06fo.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBuHSNGpixxt5CJG5pOh96IV52e3xA4Las</string>
+	<key>GCM_SENDER_ID</key>
+	<string>752037417785</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>app.dportillo.bookspark</string>
+	<key>PROJECT_ID</key>
+	<string>social-book-app-b45cc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>social-book-app-b45cc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:752037417785:ios:73221ad140516e48d64ee8</string>
+</dict>
+</plist>
