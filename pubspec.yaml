@@ -7,10 +7,10 @@ environment:
   sdk: '>=2.19.5 <3.0.0'
 
 dependencies:
-  cache:
-    path: cache/
   bloc: ^8.1.1
   bloc_provider: ^1.0.0
+  cache:
+    path: cache/
   equatable: ^2.0.5
   firebase_auth: ^4.6.0
   firebase_core: ^2.12.0
