@@ -12,7 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class SignUpWithEmailAndPasswordFailure implements Exception {
   /// {@macro sign_up_with_email_and_password_failure}
   const SignUpWithEmailAndPasswordFailure([
-    this.message = 'An unknown exception occurred.',
+    this.message = 'Ha ocurrido un error inesperado.',
   ]);
 
   /// Create an authentication message

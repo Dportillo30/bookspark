@@ -7,7 +7,7 @@ class AppTheme {
 
   ThemeData getTheme() => ThemeData(
     useMaterial3: true,
-    colorScheme: lightColorScheme,
+    colorScheme: darkColorScheme,
 
   );
 
