@@ -28,6 +28,8 @@ class SignUpForm extends StatelessWidget {
           children: [
             _EmailInput(),
             const SizedBox(height: 8),
+            _NickNameInput(),
+            const SizedBox(height: 8),
             _PasswordInput(),
             const SizedBox(height: 8),
             _ConfirmPasswordInput(),
@@ -55,6 +57,29 @@ class _EmailInput extends StatelessWidget {
             labelText: 'Correo',
             helperText: '',
             errorText: state.email.invalid ? 'invalid email' : null,
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class _NickNameInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen: (previous, current) => previous.nickname != current.nickname,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('signUpForm__NickNameInput_textField'),
+          onChanged: (nickname) => context.read<SignUpCubit>().nicknameChanged(nickname),
+          keyboardType: TextInputType.name,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            labelText: 'Nombre de usuario',
+            helperText: '',
+            errorText: state.nickname.invalid ? 'invalid nickname' : null,
           ),
         );
       },

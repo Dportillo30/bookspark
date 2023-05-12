@@ -5,6 +5,7 @@ import 'package:cache/cache.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// {@template sign_up_with_email_and_password_failure}
 /// Thrown if during the sign up process if a failure occurs.
@@ -155,10 +156,13 @@ class AuthenticationRepository {
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    FirebaseFirestore? firestore,
   })  : _cache = cache ?? CacheClient(),
         _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
+  final FirebaseFirestore _firestore;
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -193,47 +197,75 @@ class AuthenticationRepository {
   /// Creates a new user with the provided [email] and [password].
   ///
   /// Throws a [SignUpWithEmailAndPasswordFailure] if an exception occurs.
-  Future<void> signUp({required String email, required String password}) async {
-    try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-    } catch (_) {
-      throw const SignUpWithEmailAndPasswordFailure();
+ Future<void> signUp({required String email, required String password, required String nickname}) async {
+  try {
+    final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    
+    final userDoc = await _firestore.collection('users').doc(userCredential.user!.uid).get();
+    if (!userDoc.exists) {
+      // Create a new user document in Firestore
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': userCredential.user!.email,
+        'displayName': nickname,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
     }
+
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+  } catch (_) {
+    throw const SignUpWithEmailAndPasswordFailure();
   }
+}
+
+
 
   /// Starts the Sign In with Google Flow.
   ///
   /// Throws a [LogInWithGoogleFailure] if an exception occurs.
-  Future<void> logInWithGoogle() async {
-    try {
-      late final firebase_auth.AuthCredential credential;
-      if (isWeb) {
-        final googleProvider = firebase_auth.GoogleAuthProvider();
-        final userCredential = await _firebaseAuth.signInWithPopup(
-          googleProvider,
-        );
-        credential = userCredential.credential!;
-      } else {
-        final googleUser = await _googleSignIn.signIn();
-        final googleAuth = await googleUser!.authentication;
-        credential = firebase_auth.GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-      }
+Future<User> logInWithGoogle() async {
+  try {
+    final googleUser = await _googleSignIn.signIn();
 
-      await _firebaseAuth.signInWithCredential(credential);
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw LogInWithGoogleFailure.fromCode(e.code);
-    } catch (_) {
-      throw const LogInWithGoogleFailure();
+    if (googleUser == null) {
+      throw LogInWithGoogleFailure('El usuario ha cancelado la autenticación.');
     }
+
+    final googleAuth = await googleUser.authentication;
+    final credential = firebase_auth.GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final userCredential =
+        await _firebaseAuth.signInWithCredential(credential);
+    final user = userCredential.user!;
+
+    // Check if the user already exists in Firestore
+    final userDoc = await _firestore.collection('users').doc(user.uid).get();
+
+    if (!userDoc.exists) {
+      // Create a new user document in Firestore
+      await _firestore.collection('users').doc(user.uid).set({
+        'email': user.email,
+        'displayName': user.displayName,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
+    // Return the User object
+    return User(
+      id: user.uid,
+      email: user.email!,
+    );
+  } on firebase_auth.FirebaseAuthException catch (e) {
+    throw LogInWithGoogleFailure.fromCode(e.code);
+  } on Exception {
+    throw LogInWithGoogleFailure();
   }
+}
 
   /// Signs in with the provided [email] and [password].
   ///

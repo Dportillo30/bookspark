@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bookspark/domain/repository/authentication_repository.dart';
 import 'package:bookspark/presentation/global/models/confirmed_password.dart';
 import 'package:bookspark/presentation/global/models/email.dart';
+import 'package:bookspark/presentation/global/models/nickname.dart';
 import 'package:bookspark/presentation/global/models/password.dart';
 import 'package:equatable/equatable.dart';
 
@@ -23,6 +24,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           email,
           state.password,
           state.confirmedPassword,
+          state.nickname,
         ]),
       ),
     );
@@ -42,6 +44,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.email,
           password,
           confirmedPassword,
+          state.nickname,
         ]),
       ),
     );
@@ -59,6 +62,22 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.email,
           state.password,
           confirmedPassword,
+          state.nickname
+        ]),
+      ),
+    );
+  }
+
+  void nicknameChanged(String value) {
+    final nickname = Nickname.dirty(value);
+    emit(
+      state.copyWith(
+        nickname: nickname,
+        status: Formz.validate([
+          state.email,
+          state.password,
+          state.confirmedPassword,
+          nickname
         ]),
       ),
     );
@@ -71,6 +90,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       await _authenticationRepository.signUp(
         email: state.email.value,
         password: state.password.value,
+        nickname: state.nickname.value,
       );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on SignUpWithEmailAndPasswordFailure catch (e) {
