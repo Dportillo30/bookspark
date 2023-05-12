@@ -30,17 +30,17 @@ class LoginForm extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/dark_logo.png',
-                height: 120,
+                height: MediaQuery.of(context).size.height * 0.5,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               _EmailInput(),
               const SizedBox(height: 8),
               _PasswordInput(),
               const SizedBox(height: 8),
               _LoginButton(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               _GoogleLoginButton(),
-              const SizedBox(height: 4),
+              const SizedBox(height: 16),
               _SignUpButton(),
             ],
           ),
@@ -61,8 +61,9 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<LoginCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: 'Correo electronico',
-            helperText: '',
+            helperText: 'example@gmail.com',
             errorText: state.email.invalid ? 'Correo no valido' : null,
           ),
         );
@@ -83,6 +84,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: 'Contraseña',
             helperText: '',
             errorText: state.password.invalid ? 'Contraseña invalida' : null,

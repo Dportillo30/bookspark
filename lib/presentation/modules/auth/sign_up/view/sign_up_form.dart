@@ -51,6 +51,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: 'Correo',
             helperText: '',
             errorText: state.email.invalid ? 'invalid email' : null,
@@ -73,6 +74,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: 'Contraseña',
             helperText: '',
             errorText: state.password.invalid ? 'invalid password' : null,
@@ -98,6 +100,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: 'Verifica la contraseña',
             helperText: '',
             errorText: state.confirmedPassword.invalid
@@ -113,6 +116,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
 class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
@@ -124,12 +128,12 @@ class _SignUpButton extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: Colors.orangeAccent,
+                  backgroundColor: theme.colorScheme.tertiary,
                 ),
                 onPressed: state.status.isValidated
                     ? () => context.read<SignUpCubit>().signUpFormSubmitted()
                     : null,
-                child: const Text('Registrars'),
+                child: const Text('Registrarse'),
               );
       },
     );
