@@ -1,5 +1,6 @@
 import 'package:bookspark/presentation/global/widgets/avatar.dart';
 import 'package:bookspark/presentation/modules/app/app.dart';
+import 'package:bookspark/presentation/modules/clubs/views/club_page.dart';
 import 'package:bookspark/presentation/modules/home/views/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     const Center(child: Text('Inicio')),
-    const Center(child: Text('Clubs de lectura')),
+    const ClubPage(),
     const ProfilePage(),
   ];
 
@@ -25,7 +26,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
         actions: <Widget>[
           IconButton(
             key: const Key('homePage_logout_iconButton'),

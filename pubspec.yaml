@@ -11,6 +11,7 @@ dependencies:
   bloc_provider: ^1.0.0
   cache:
     path: cache/
+  cloud_firestore: ^4.7.0
   equatable: ^2.0.5
   firebase_auth: ^4.6.0
   firebase_core: ^2.12.0
