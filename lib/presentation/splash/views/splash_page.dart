@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
+    static Page<void> page() => const MaterialPage<void>(child: SplashPage());
+
   @override
   State<SplashPage> createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
 
-  static Page<void> page() => const MaterialPage<void>(child: SplashPage());
   bool animate = false;
 
   @override
