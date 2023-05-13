@@ -1,4 +1,5 @@
 import 'package:bookspark/presentation/modules/clubs/services/firebase_club_service.dart';
+import 'package:bookspark/presentation/modules/clubs/views/club_details_page.dart';
 import 'package:bookspark/presentation/modules/clubs/views/join_club.dart';
 import 'package:bookspark/presentation/modules/clubs/views/new_club_page.dart';
 import 'package:flutter/material.dart';
@@ -101,31 +102,11 @@ class _ClubPageState extends State<ClubPage> {
   }
 
   void _showClubDetails(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(_selectedClub['name']),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_selectedClub['description']),
-              const SizedBox(height: 10),
-              Text('Libro actual: ${_selectedClub['currentBook']}'),
-              Text('Fecha de reunión: ${_selectedClub['meetingDate']}'),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cerrar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (BuildContext context) => ClubDetailsPage(club: _selectedClub),
+    ),
+  );
+}
+
 }
