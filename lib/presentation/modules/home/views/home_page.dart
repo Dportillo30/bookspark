@@ -1,4 +1,3 @@
-import 'package:bookspark/presentation/global/widgets/avatar.dart';
 import 'package:bookspark/presentation/modules/app/app.dart';
 import 'package:bookspark/presentation/modules/clubs/views/club_page.dart';
 import 'package:bookspark/presentation/modules/home/views/profile_page.dart';

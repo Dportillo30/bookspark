@@ -231,7 +231,7 @@ Future<User> logInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
 
     if (googleUser == null) {
-      throw LogInWithGoogleFailure('El usuario ha cancelado la autenticación.');
+      throw const LogInWithGoogleFailure('El usuario ha cancelado la autenticación.');
     }
 
     final googleAuth = await googleUser.authentication;
@@ -263,7 +263,7 @@ Future<User> logInWithGoogle() async {
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw LogInWithGoogleFailure.fromCode(e.code);
   } on Exception {
-    throw LogInWithGoogleFailure();
+    throw const LogInWithGoogleFailure();
   }
 }
 

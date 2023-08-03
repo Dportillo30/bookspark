@@ -36,7 +36,7 @@ class _NewClubPageState extends State<NewClubPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crear nuevo club'),
+        title: const Text('Crear nuevo club'),
         centerTitle: true,
       ),
       body: Padding(
@@ -48,7 +48,7 @@ class _NewClubPageState extends State<NewClubPage> {
             children: [
               TextFormField(
                 controller: _clubIdController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'ID del club',
                 ),
                 validator: (value) {
@@ -58,10 +58,10 @@ class _NewClubPageState extends State<NewClubPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nombre del club',
                 ),
                 validator: (value) {
@@ -71,10 +71,10 @@ class _NewClubPageState extends State<NewClubPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Descripción del club',
                 ),
                 validator: (value) {
@@ -84,10 +84,10 @@ class _NewClubPageState extends State<NewClubPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _currentBookController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Libro actual del club',
                 ),
                 validator: (value) {
@@ -97,10 +97,10 @@ class _NewClubPageState extends State<NewClubPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _meetingDateController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Fecha de reunión del club',
                 ),
                 validator: (value) {
@@ -110,13 +110,13 @@ class _NewClubPageState extends State<NewClubPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
                     _createClub(_clubIdController.text.trim(),_currentBookController.text.trim(),_descriptionController.text.trim(),_meetingDateController.text.trim(),_nameController.text.trim(),user.id);
               },
-              child: Text('Crear club'),
+              child: const Text('Crear club'),
             ),
           ),
         ],
@@ -132,14 +132,14 @@ void _createClub( String clubId,String currentBook, String description, String m
   createClub(clubId,currentBook,description,meetingDate,name,userUId,).then((_) {
     // Show a success message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Has creado el club')),
+      const SnackBar(content: Text('Has creado el club')),
     );
     widget.updateClubsView();
     Navigator.pop(context);
   }).catchError((error) {
     // Show an error message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error al crear al club')),
+      const SnackBar(content: Text('Error al crear al club')),
     );
   });
 }

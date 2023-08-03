@@ -51,7 +51,7 @@ void _joinClub(dynamic club,String userId) {
   }).catchError((error) {
     // Show an error message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error al unirse al club')),
+      const SnackBar(content: Text('Error al unirse al club')),
     );
   });
 }
@@ -64,7 +64,7 @@ void _joinClub(dynamic club,String userId) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Buscar y unirse a un club'),
+        title: const Text('Buscar y unirse a un club'),
         centerTitle: true,
       ),
       body: Column(
@@ -72,7 +72,7 @@ void _joinClub(dynamic club,String userId) {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Buscar club',
                 border: OutlineInputBorder(),
                 suffixIcon: Icon(Icons.search),
@@ -83,7 +83,7 @@ void _joinClub(dynamic club,String userId) {
             ),
           ),
           _isLoading
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : Expanded(
@@ -94,7 +94,7 @@ void _joinClub(dynamic club,String userId) {
                       return ListTile(
                         title: Text(club['name']),
                         subtitle: Text(club['description']),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                         onTap: () {
                           _joinClub(club,user.id);
                         },

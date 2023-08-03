@@ -8,9 +8,9 @@ Future<List> joinedClubs(String userId) async {
 
   QuerySnapshot queryClub = await collectionReferenceClubs.where('userId', arrayContains: userId).get();
 
-  queryClub.docs.forEach((document) {
+  for (var document in queryClub.docs) {
     clubs.add(document.data());
-  });
+  }
 
   return clubs;
 }
@@ -23,9 +23,9 @@ Future<List> getClubs() async {
   QuerySnapshot queryClub = await collectionReferenceClubs.get();
 
 
-  queryClub.docs.forEach((documneto) {
+  for (var documneto in queryClub.docs) {
     clubs.add(documneto.data());
-   });
+   }
 
    return clubs;
 } 

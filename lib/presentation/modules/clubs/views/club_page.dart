@@ -3,8 +3,6 @@ import 'package:bookspark/presentation/modules/clubs/views/club_details_page.dar
 import 'package:bookspark/presentation/modules/clubs/views/join_club.dart';
 import 'package:bookspark/presentation/modules/clubs/views/new_club_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:bookspark/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../app/controllers/bloc/app_bloc.dart';
@@ -25,8 +23,6 @@ class _ClubPageState extends State<ClubPage> {
     final user = context.select((AppBloc bloc) => bloc.state.user);
 
   void _updateClubsView() async {
-  final user = context.read<AppBloc>().state.user;
-  final clubs = await joinedClubs(user.id);
   setState(() {
     _selectedClub = null;
   });
@@ -34,7 +30,7 @@ class _ClubPageState extends State<ClubPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis clubs de lectura'),
+        title: const Text('Mis clubs de lectura'),
         centerTitle: true, // Centra el título en la AppBar
       ),
       body: FutureBuilder(
@@ -50,7 +46,7 @@ class _ClubPageState extends State<ClubPage> {
                     return ListTile(
                       title: Text(snapshot.data![index]['name']),
                       subtitle: Text(snapshot.data![index]['description']), // Añade la descripción como subtitulo
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // Añade padding horizontal
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0), // Añade padding horizontal
                       onTap: () {
                         setState(() {
                           _selectedClub = snapshot.data![index];
@@ -65,7 +61,7 @@ class _ClubPageState extends State<ClubPage> {
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
