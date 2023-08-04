@@ -15,7 +15,7 @@ class ClubPage extends StatefulWidget {
 }
 
 class _ClubPageState extends State<ClubPage> {
-  var _selectedClub; // Variable para almacenar el club seleccionado
+  var _selectedClub;// Variable para almacenar el club seleccionado
 
   @override
   Widget build(BuildContext context){
@@ -45,8 +45,8 @@ class _ClubPageState extends State<ClubPage> {
                   itemBuilder: (context,index){
                     return ListTile(
                       title: Text(snapshot.data![index]['name']),
-                      subtitle: Text(snapshot.data![index]['description']), // Añade la descripción como subtitulo
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0), // Añade padding horizontal
+                      subtitle: Text(snapshot.data![index]['description']), 
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                       onTap: () {
                         setState(() {
                           _selectedClub = snapshot.data![index];
@@ -97,12 +97,30 @@ class _ClubPageState extends State<ClubPage> {
     );
   }
 
-  void _showClubDetails(BuildContext context) {
-  Navigator.of(context).push(
+
+  void _updateClubsView() async {
+  setState(() {
+    _selectedClub = null;
+  });
+
+
+  setState(() {
+    // Update the club list with the newly fetched data.
+    _selectedClub = null;
+
+  });
+}
+
+void _showClubDetails(BuildContext context) async {
+  final result = await Navigator.of(context).push(
     MaterialPageRoute(
       builder: (BuildContext context) => ClubDetailsPage(club: _selectedClub),
     ),
   );
+
+  if (result == true) {
+    _updateClubsView();
+  }
 }
 
 }

@@ -50,6 +50,7 @@ await documentReferenceClub.set({
   'currentBook': currentBook,
   'description': description,
   'meetingDate': meetingDate,
+  'clubOwner': userId,
   'bookId': bookId,
   'name': name,
   'userId': [userId],
@@ -63,4 +64,12 @@ Future<void> leaveClub(String clubId, String userId) async {
 
   // Remove the user ID from the 'userId' array in the document
   await documentReferenceClub.update({'userId': FieldValue.arrayRemove([userId])});
+}
+
+
+Future<void> deleteClub(String clubId) async {
+  CollectionReference collectionReferenceClubs = db.collection('Club');
+  DocumentReference documentReferenceClub = collectionReferenceClubs.doc(clubId);
+
+  await documentReferenceClub.delete();
 }

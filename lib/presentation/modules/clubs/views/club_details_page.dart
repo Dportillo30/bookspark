@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 
 import '../services/firebase_club_service.dart';
@@ -14,13 +15,15 @@ class ClubDetailsPage extends StatefulWidget {
   _ClubDetailsPageState createState() => _ClubDetailsPageState();
 }
 
-class _ClubDetailsPageState extends State<ClubDetailsPage> {
+class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProviderStateMixin {
   String? bookCoverUrl;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    // Call the method to fetch book cover when the widget is initialized.
+    _tabController = TabController(length: 2, vsync: this);
+
     fetchBookCover();
   }
 
@@ -45,38 +48,55 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    final String clubOwnerID = widget.club['clubOwner'];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.club['name']),
-        actions: [
+actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
-              if (value == 'leave') {
-                _leaveClub();
+              if (currentUserID == clubOwnerID) {
+                if (value == 'delete') {
+                  _deleteClub();
+                }
+              } else {
+                if (value == 'leave') {
+                  _leaveClub();
+                }
               }
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
-                  value: 'leave',
-                  child: Text('Abandonar club'),
-                ),
+                if (currentUserID == clubOwnerID)
+                  const PopupMenuItem<String>(
+                    value: 'delete',
+                    child: Text('Eliminar club'),
+                  )
+                else
+                  const PopupMenuItem<String>(
+                    value: 'leave',
+                    child: Text('Abandonar club'),
+                  ),
               ];
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (bookCoverUrl != null)
-              InkWell(
-                onTap: () => _showImageDialog(context),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(bookCoverUrl!),
-                  radius: 100, // Adjust the radius as needed.
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                child: InkWell(
+                  onTap: () => _showImageDialog(context),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(bookCoverUrl!),
+                    radius: 35,
+                  ),
                 ),
               ),
             if (bookCoverUrl == null)
@@ -84,53 +104,69 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
                 child: CircularProgressIndicator(),
               ),
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                const Row(
-                  children: [
-                    Icon(Icons.people, size: 24),
-                    SizedBox(width: 8),
-                    Text(
-                      '',
-                      style: TextStyle(
+                        Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+              child: ElevatedButton(
+                onPressed: () => _openSampleBook(),
+                child: const Text('Ver muestra del libro'),
+              ),
+            ),
+
+            const SizedBox(height: 14.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Row(
+                      children: [
+                        Icon(Icons.people, size: 24),
+                        SizedBox(width: 8),
+                        Text(
+                          '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${widget.club['userId'].length}',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18.0,
                       ),
                     ),
-                  ],
-                ),
-                Expanded(
-                  child: Text(
-                    '${widget.club['userId'].length}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                  ),
+                  const Expanded(
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today, size: 24),
+                        SizedBox(width: 8),
+                        Text(
+                          '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                const Row(
-                  children: [
-                    Icon(Icons.calendar_today, size: 24),
-                    SizedBox(width: 8),
-                    Text(
-                      '',
-                      style: TextStyle(
+                  Expanded(
+                    child: Text(
+                      widget.club['meetingDate'],
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14.0,
                       ),
                     ),
-                  ],
-                ),
-                Expanded(
-                  child: Text(
-                    widget.club['meetingDate'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 14.0),
             const ListTile(
@@ -144,9 +180,12 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
               ),
             ),
             const SizedBox(height: 6.0),
-            Text(
-              widget.club['description'],
-              style: const TextStyle(fontSize: 14.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                widget.club['description'],
+                style: const TextStyle(fontSize: 14.0),
+              ),
             ),
             const SizedBox(height: 14.0),
             const ListTile(
@@ -160,9 +199,37 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
               ),
             ),
             const SizedBox(height: 6.0),
-            Text(
-              widget.club['currentBook'],
-              style: const TextStyle(fontSize: 14.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                widget.club['currentBook'],
+                style: const TextStyle(fontSize: 14.0),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(text: 'Comunidad'),
+                  Tab(text: 'Actividades'),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.25, // Max 25% height for TabBarView
+              child: TabBarView(
+                controller: _tabController,
+                children: const [
+                  Center(
+                    child: Text('Comunidad Content'),
+                  ),
+                  Center(
+                    child: Text('Actividades Content'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -186,14 +253,45 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
     try {
       await leaveClub(clubId, userId);
 
-      // Show a success message or navigate back, etc.
+      Navigator.pop(context, true);
+      ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text('Has abandonado el club ' + widget.club['name'])),
+    );
       // ...
     } catch (e) {
-      // Handle any errors that occur during the leave process.
-      // ...
+      ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text('Error al abandonar el club, intentalo de nuevo mas tarde')),
+    );
     }
   }
 
 
+  void _deleteClub() async {
+    final clubId = widget.club['clubID'];
 
+    try {
+      await deleteClub(clubId);
+      Navigator.pop(context, true);
+      ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text('Has elimnado el club ' + widget.club['name'])),
+    );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text('Error al eliminar el club, intentalo de nuevo mas tarde')),
+    );
+    }
+  }
+
+    void _openSampleBook() async {
+    final String bookId = widget.club['bookId'];
+    final String sampleUrl = 'https://play.google.com/books/reader?id=$bookId';
+
+    if (await canLaunchUrl(Uri.parse(sampleUrl))) {
+      await launchUrl(Uri.parse(sampleUrl));
+    } else {
+     ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text('Error al abrir la muestra')),
+    );
+    }
+  }
 }

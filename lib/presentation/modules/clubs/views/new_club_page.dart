@@ -76,7 +76,7 @@ class _NewClubPageState extends State<NewClubPage> {
               TextFormField(
                 controller: _clubIdController,
                 decoration: const InputDecoration(
-                  labelText: 'ID del club',
+                  labelText: 'Codigo del club',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
