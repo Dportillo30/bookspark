@@ -40,17 +40,27 @@ Future<void> joinClub(String clubId, String userId) async {
 }
 
 
-Future<void> createClub(String clubId, String currentBook, String description, String meetingDate, String name, String userId) async {
+Future<void> createClub(String clubId, String currentBook, String description, String meetingDate, String name, String userId ,String bookId) async {
 CollectionReference collectionReferenceClubs = db.collection('Club');
 DocumentReference documentReferenceClub = collectionReferenceClubs.doc(clubId);
 
 // Crea el nuevo documento con los campos especificados
 await documentReferenceClub.set({
-'clubID': clubId,
-'currentBook': currentBook,
-'description': description,
-'meetingDate': meetingDate,
-'name': name,
-'userId': [userId],
-});
+  'clubID': clubId,
+  'currentBook': currentBook,
+  'description': description,
+  'meetingDate': meetingDate,
+  'bookId': bookId,
+  'name': name,
+  'userId': [userId],
+  });
+}
+
+
+Future<void> leaveClub(String clubId, String userId) async {
+  CollectionReference collectionReferenceClubs = db.collection('Club');
+  DocumentReference documentReferenceClub = collectionReferenceClubs.doc(clubId);
+
+  // Remove the user ID from the 'userId' array in the document
+  await documentReferenceClub.update({'userId': FieldValue.arrayRemove([userId])});
 }
