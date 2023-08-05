@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "752037417785",
+    "firebase_url": "https://social-book-app-b45cc-default-rtdb.firebaseio.com",
     "project_id": "social-book-app-b45cc",
     "storage_bucket": "social-book-app-b45cc.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "752037417785-euqverctmr1nrkrf26nfs90poofgq8ou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.dportillo.bookspark",
+            "certificate_hash": "9dea1dfb4f26975a59066d3849f4943364870470"
+          }
+        },
         {
           "client_id": "752037417785-nl8848mqeo4i89k3n7crpibk2911eme8.apps.googleusercontent.com",
           "client_type": 3
