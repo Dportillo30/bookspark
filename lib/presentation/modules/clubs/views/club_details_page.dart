@@ -1,3 +1,4 @@
+import 'package:bookspark/presentation/modules/activity/views/club_activities.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,8 @@ import 'dart:convert';
 import '../services/firebase_club_service.dart';
 
 class ClubDetailsPage extends StatefulWidget {
+  
+  
   final Map<String, dynamic> club;
 
   const ClubDetailsPage({Key? key, required this.club}) : super(key: key);
@@ -16,8 +19,12 @@ class ClubDetailsPage extends StatefulWidget {
 }
 
 class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProviderStateMixin {
+
+  
   String? bookCoverUrl;
   late TabController _tabController;
+  
+  
 
   @override
   void initState() {
@@ -30,6 +37,8 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
   Future<void> fetchBookCover() async {
     const String apiKey = 'AIzaSyAeyq7fOh6FVW2vwEX82mkTGVmnA5HKQrY';
     final String bookId = widget.club['bookId'];
+    
+    
 
     final String apiUrl = 'https://www.googleapis.com/books/v1/volumes/$bookId?key=$apiKey';
 
@@ -42,7 +51,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
         bookCoverUrl = coverUrl;
       });
     } else {
-      // Handle API error here if needed.
+      //TODO error handle : manejar error por si el libro no tiene portada/ no se encuentra disponible
     }
   }
 
@@ -50,7 +59,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
   Widget build(BuildContext context) {
     final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
     final String clubOwnerID = widget.club['clubOwner'];
-
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.club['name']),
@@ -103,8 +112,8 @@ actions: [
               const Center(
                 child: CircularProgressIndicator(),
               ),
-            const SizedBox(height: 16.0),
-                        Padding(
+            const SizedBox(height: 10.0),
+             Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8.0),
               child: ElevatedButton(
                 onPressed: () => _openSampleBook(),
@@ -112,7 +121,7 @@ actions: [
               ),
             ),
 
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 10.0),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -126,7 +135,7 @@ actions: [
                           '',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                            fontSize: 16.0,
                           ),
                         ),
                       ],
@@ -137,7 +146,7 @@ actions: [
                       '${widget.club['userId'].length}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                       ),
                     ),
                   ),
@@ -150,7 +159,7 @@ actions: [
                           '',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 14.0,
+                            fontSize: 12.0,
                           ),
                         ),
                       ],
@@ -161,21 +170,21 @@ actions: [
                       widget.club['meetingDate'],
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 10.0),
             const ListTile(
               leading: Icon(Icons.description),
               title: Text(
                 'Descripción:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                 ),
               ),
             ),
@@ -184,17 +193,17 @@ actions: [
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 widget.club['description'],
-                style: const TextStyle(fontSize: 14.0),
+                style: const TextStyle(fontSize: 12.0),
               ),
             ),
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 10.0),
             const ListTile(
               leading: Icon(Icons.book),
               title: Text(
                 'Libro actual:',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                 ),
               ),
             ),
@@ -203,7 +212,7 @@ actions: [
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 widget.club['currentBook'],
-                style: const TextStyle(fontSize: 14.0),
+                style: const TextStyle(fontSize: 12.0),
               ),
             ),
             const SizedBox(height: 20.0),
@@ -218,15 +227,15 @@ actions: [
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25, // Max 25% height for TabBarView
+              height: MediaQuery.of(context).size.height * 0.50, // Max 25% height for TabBarView
               child: TabBarView(
                 controller: _tabController,
-                children: const [
+                children:  [
                   Center(
                     child: Text('Comunidad Content'),
                   ),
                   Center(
-                    child: Text('Actividades Content'),
+                    child: ClubActivities(clubId: widget.club['clubID']),
                   ),
                 ],
               ),

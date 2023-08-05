@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:752037417785:android:6ce81f4f549a994ed64ee8",
+        "mobilesdk_app_id": "1:752037417785:android:392cb33701b0e12cd64ee8",
         "android_client_info": {
           "package_name": "app.dportillo.bookspark"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "752037417785-euqverctmr1nrkrf26nfs90poofgq8ou.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.dportillo.bookspark",
-            "certificate_hash": "9dea1dfb4f26975a59066d3849f4943364870470"
-          }
-        },
         {
           "client_id": "752037417785-nl8848mqeo4i89k3n7crpibk2911eme8.apps.googleusercontent.com",
           "client_type": 3

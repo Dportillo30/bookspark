@@ -123,7 +123,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      floatingActionButton: Column(
+      floatingActionButton: _currentIndex == 0
+          ? Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -182,7 +183,7 @@ class _HomePageState extends State<HomePage> {
             child: Icon(Icons.message),
           ),
         ],
-      ),
+      ): null,
     );
   }
 }

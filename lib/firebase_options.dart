@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -44,39 +47,31 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD1-11FV7fUFIaXLN_3gfzilCuwFSY4e7w',
-    appId: '1:752037417785:web:ba9aed859109ea77d64ee8',
+    apiKey: 'AIzaSyAeyq7fOh6FVW2vwEX82mkTGVmnA5HKQrY',
+    appId: '1:752037417785:web:cbb54d7f861fcf17d64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
     authDomain: 'social-book-app-b45cc.firebaseapp.com',
+    databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
     storageBucket: 'social-book-app-b45cc.appspot.com',
-    measurementId: 'G-XC9Q8BTJ9W',
+    measurementId: 'G-PYCLNNWG7M',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBRsTJEZKQObbOeu1Xs5x5dfa_HJwW0JqA',
-    appId: '1:752037417785:android:6ce81f4f549a994ed64ee8',
+    appId: '1:752037417785:android:392cb33701b0e12cd64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
+    databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
     storageBucket: 'social-book-app-b45cc.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBuHSNGpixxt5CJG5pOh96IV52e3xA4Las',
-    appId: '1:752037417785:ios:73221ad140516e48d64ee8',
+    appId: '1:752037417785:ios:6b57e8b8ff6717ead64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
-    storageBucket: 'social-book-app-b45cc.appspot.com',
-    androidClientId: '752037417785-809tlo2jh56rmb9chf9ij33qrqcc06fo.apps.googleusercontent.com',
-    iosClientId: '752037417785-dc9ho6ge7khk7obigvh86ofaqo55kt0q.apps.googleusercontent.com',
-    iosBundleId: 'app.dportillo.bookspark',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBuHSNGpixxt5CJG5pOh96IV52e3xA4Las',
-    appId: '1:752037417785:ios:73221ad140516e48d64ee8',
-    messagingSenderId: '752037417785',
-    projectId: 'social-book-app-b45cc',
+    databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
     storageBucket: 'social-book-app-b45cc.appspot.com',
     androidClientId: '752037417785-809tlo2jh56rmb9chf9ij33qrqcc06fo.apps.googleusercontent.com',
     iosClientId: '752037417785-dc9ho6ge7khk7obigvh86ofaqo55kt0q.apps.googleusercontent.com',
