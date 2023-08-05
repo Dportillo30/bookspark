@@ -73,3 +73,12 @@ Future<void> deleteClub(String clubId) async {
 
   await documentReferenceClub.delete();
 }
+
+
+Future<void> updatePageNumber(String clubId, String pageNumber) async {
+  CollectionReference collectionReferenceClubs = db.collection('Club');
+  DocumentReference documentReferenceClub = collectionReferenceClubs.doc(clubId);
+
+  // Actualiza el campo "pageNumber" del documento en la colección "Club" con el nuevo valor "pageNumber" 
+  await documentReferenceClub.update({'pageNumber': pageNumber});
+}

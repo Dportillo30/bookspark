@@ -173,12 +173,12 @@ class _HomePageState extends State<HomePage> {
               );
             },
             child: Icon(Icons.add),
+            tooltip: 'Crear nuevo post',
           ),
           SizedBox(height: 12),
           FloatingActionButton(
             onPressed: () {
-              // Lógica para el segundo botón flotante (icono de mensaje)
-              // Por ejemplo, podrías abrir una página de mensajes o un chat.
+              //TODO SITEMA DE MENSAJERIA
             },
             child: Icon(Icons.message),
           ),

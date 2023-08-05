@@ -23,6 +23,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
   
   String? bookCoverUrl;
   late TabController _tabController;
+  int? totalPages;
   
   
 
@@ -50,6 +51,11 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
       setState(() {
         bookCoverUrl = coverUrl;
       });
+
+    final int totalPageCount = responseData['volumeInfo']['pageCount'];
+      setState(() {
+      totalPages = totalPageCount;
+    });
     } else {
       //TODO error handle : manejar error por si el libro no tiene portada/ no se encuentra disponible
     }
@@ -60,6 +66,13 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> with SingleTickerProv
     final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
     final String clubOwnerID = widget.club['clubOwner'];
     
+    double? progress; // Declarar la variable aquí
+
+    // Calculate progress if totalPages and pageNumber are available
+    if (totalPages != null && widget.club['pageNumber'] != null) {
+      progress = double.parse(widget.club['pageNumber']!) / totalPages!.toDouble();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.club['name']),
@@ -108,11 +121,37 @@ actions: [
                   ),
                 ),
               ),
+               const SizedBox(width: 16), // Espacio entre la imagen y el botón
+                  if (currentUserID == clubOwnerID) // Botón condicional para el clubOwner
+                    ElevatedButton(
+                      onPressed: () {
+                        // Aquí llamamos al método para actualizar el número de páginas
+                        _updatePageNumberDialog();
+                      },
+                      child: Text('Actualizar páginas'),
+                    ),
             if (bookCoverUrl == null)
               const Center(
                 child: CircularProgressIndicator(),
               ),
             const SizedBox(height: 10.0),
+              if (progress != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 20, // Personaliza la altura de la barra
+                      ),
+                      const SizedBox(height: 8), // Espacio entre la barra y el porcentaje
+                      Text(
+                        '${(progress * 100).toStringAsFixed(0)}%', // Muestra el porcentaje como números
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
              Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 8.0),
               child: ElevatedButton(
@@ -303,4 +342,59 @@ actions: [
     );
     }
   }
+
+void _updatePageNumberDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      String newPageNumber = ''; // Variable para almacenar el nuevo número de páginas ingresado
+
+      return AlertDialog(
+        title: Text('Actualizar número de páginas'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Cantidad total de páginas: ${totalPages ?? ''}'),
+            SizedBox(height: 8),
+            TextField(
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                newPageNumber = value;
+              },
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              
+              if (totalPages != null && int.parse(newPageNumber) <= totalPages!) {
+                await updatePageNumber(widget.club['clubID'], newPageNumber);
+
+              
+                setState(() {});
+
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('El número de páginas debe ser menor o igual a la cantidad total del libro')),
+                );
+              }
+            },
+            child: Text('Actualizar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancelar'),
+          ),
+        ],
+      );
+    },
+  );
 }
+
+
+}
+
