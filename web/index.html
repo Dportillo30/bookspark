@@ -25,9 +25,30 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="bookspark">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="google-signin-client_id" content="752037417785-nl8848mqeo4i89k3n7crpibk2911eme8.apps.googleusercontent.com">
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any">
+  
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyAeyq7fOh6FVW2vwEX82mkTGVmnA5HKQrY",
+  authDomain: "social-book-app-b45cc.firebaseapp.com",
+  databaseURL: "https://social-book-app-b45cc-default-rtdb.firebaseio.com",
+  projectId: "social-book-app-b45cc",
+  storageBucket: "social-book-app-b45cc.appspot.com",
+  messagingSenderId: "752037417785",
+  appId: "1:752037417785:web:91c4c78df15fe4c9d64ee8",
+  measurementId: "G-8J420HZEYN"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
 
 
   <title>bookspark</title>

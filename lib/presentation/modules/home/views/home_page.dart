@@ -4,11 +4,13 @@ import 'package:bookspark/presentation/modules/home/views/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 import '../../app/controllers/bloc/app_bloc.dart';
 import '../../clubs/views/club_page.dart';
+import '../../post/views/post_feed.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,58 +30,71 @@ class _HomePageState extends State<HomePage> {
   ];
 
   // Firebase Database and Storage references
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
+
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
   // Text and image variables for post
   String _postText = '';
   XFile? _pickedImage;
 
   // Function to handle post submission
-  void _submitPost() async {
-    if (_postText.isEmpty) {
-      // Show an error dialog if post text is empty
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('El texto del post no puede estar vacío.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Aceptar'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
+void _submitPost() async {
+  if (_postText.isEmpty) {
+    // Show an error dialog if post text is empty
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Error'),
+        content: const Text('El texto del post no puede estar vacío.'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Aceptar'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
 
-    // Upload image to Firebase Storage if an image is selected
-    String? imageUrl;
-    if (_pickedImage != null) {
-      final ref = _storage.ref().child('post_images').child(DateTime.now().toString());
-      final uploadTask = ref.putFile(File(_pickedImage!.path));
-      final snapshot = await uploadTask.whenComplete(() {});
-      imageUrl = await snapshot.ref.getDownloadURL();
-    }
+  // Replace 'userId' con el ID del usuario actual
+  final userId = 'tu_id_de_usuario';
 
-    // Create the post object
-    final post = {
-      'text': _postText,
-      'image': imageUrl,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-    };
+  // Upload image to Firebase Storage if an image is selected
+  String? imageUrl;
+  if (_pickedImage != null) {
+    final ref = _storage.ref().child('post_images').child(DateTime.now().toString());
+    final uploadTask = ref.putFile(File(_pickedImage!.path));
+    final snapshot = await uploadTask.whenComplete(() {});
+    imageUrl = await snapshot.ref.getDownloadURL();
+  }
 
-    // Save the post in Firebase Realtime Database
-    _database.reference().child('posts').push().set(post);
+  // Create the post object
+  final post = {
+    'text': _postText,
+    'image': imageUrl,
+    'timestamp': DateTime.now(),
+    'userId': userId, // Agrega la información del usuario
+    'likeCount': 0, // Inicializa el conteo de likes en 0
+    'comments': [], // Inicializa la lista de comentarios como vacía
+  };
+
+  try {
+    // Save the post in Firebase Firestore
+    await _firestore.collection('posts').add(post);
 
     // Clear post variables after submission
     setState(() {
       _postText = '';
       _pickedImage = null;
     });
+  } catch (e) {
+    // Handle any errors that occur during Firestore write
+    print('Error saving post: $e');
   }
+}
 
   // Function to pick an image from gallery
   Future<void> _pickImage() async {
@@ -190,50 +205,3 @@ class _HomePageState extends State<HomePage> {
 
 
 
-class PostFeed extends StatefulWidget {
-  final DatabaseReference _postsRef = FirebaseDatabase.instance.reference().child('posts');
-
-  @override
-  State<PostFeed> createState() => _PostFeedState();
-}
-
-class _PostFeedState extends State<PostFeed> {
-  Future<void> _refreshPosts() async {
-    // Wait for a short duration to simulate the refresh process.
-    // You can replace this with the actual data fetching from the database.
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _refreshPosts,
-      child: StreamBuilder<DatabaseEvent>(
-        stream: widget._postsRef.orderByChild('timestamp').onValue,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
-            Map<dynamic, dynamic> posts = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-            List<Widget> postList = [];
-            posts.forEach((key, value) {
-              postList.add(
-                Card(
-                  child: ListTile(
-                    title: Text(value['text']),
-                    subtitle: value['image'] != null ? Image.network(value['image']) : null,
-                  ),
-                ),
-              );
-            });
-
-            return ListView(
-              children: postList,
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    );
-  }
-}

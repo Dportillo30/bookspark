@@ -48,18 +48,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyAeyq7fOh6FVW2vwEX82mkTGVmnA5HKQrY',
-    appId: '1:752037417785:web:cbb54d7f861fcf17d64ee8',
+    appId: '1:752037417785:web:c3437dd225dc2346d64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
     authDomain: 'social-book-app-b45cc.firebaseapp.com',
     databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
     storageBucket: 'social-book-app-b45cc.appspot.com',
-    measurementId: 'G-PYCLNNWG7M',
+    measurementId: 'G-DRE7CP8E75',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBRsTJEZKQObbOeu1Xs5x5dfa_HJwW0JqA',
-    appId: '1:752037417785:android:392cb33701b0e12cd64ee8',
+    appId: '1:752037417785:android:3d3050d15f726a3cd64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
     databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
@@ -68,7 +68,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBuHSNGpixxt5CJG5pOh96IV52e3xA4Las',
-    appId: '1:752037417785:ios:6b57e8b8ff6717ead64ee8',
+    appId: '1:752037417785:ios:14d42a11a933fa79d64ee8',
     messagingSenderId: '752037417785',
     projectId: 'social-book-app-b45cc',
     databaseURL: 'https://social-book-app-b45cc-default-rtdb.firebaseio.com',
