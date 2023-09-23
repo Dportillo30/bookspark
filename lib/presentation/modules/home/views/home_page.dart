@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:bookspark/presentation/modules/home/views/profile_info_page.dart';
 import 'package:bookspark/presentation/modules/home/views/profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,6 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isNewUser = false;
   int _currentIndex = 0;
   final List<Widget> _pages = [
     PostFeed(),
@@ -33,6 +36,27 @@ class _HomePageState extends State<HomePage> {
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+  @override
+  void initState() {
+    super.initState();
+     final user = FirebaseAuth.instance.currentUser;
+    // Obtener el UID del usuario logueado (reemplaza 'tu_id_de_usuario' por la forma en que obtienes el UID)
+    final userId = user?.uid ;
+
+    // Consultar la colección 'users' y obtener el valor de 'isNew' para el usuario actual
+    FirebaseFirestore.instance.collection('users').doc(userId).get().then((doc) {
+      if (doc.exists) {
+        setState(() {
+          isNewUser = doc.get('isNewUser') ?? false; // Si no se encuentra 'isNew', se establece en falso
+        });
+      }
+    }).catchError((error) {
+      print('Error al obtener el valor de isNew: $error');
+    });
+  }
+  
 
 
   // Text and image variables for post
@@ -105,9 +129,17 @@ void _submitPost() async {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(isNewUser ){
+      print('isNewUser:');
+      print(isNewUser);
+      return ProfileInfoPage() ;
+    }
+
+    return  Scaffold(
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
@@ -119,7 +151,7 @@ void _submitPost() async {
           )
         ],
       ),
-      body: _pages[_currentIndex],
+      body:  _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -202,6 +234,5 @@ void _submitPost() async {
     );
   }
 }
-
 
 

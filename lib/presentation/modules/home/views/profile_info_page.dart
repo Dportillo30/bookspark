@@ -1,3 +1,4 @@
+import 'package:bookspark/presentation/modules/home/views/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,9 +26,7 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Perfil'),
-      ),
+      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -70,28 +69,32 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                 },
               ),
               ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    // Guardar la información en Firestore
-                    final user = FirebaseAuth.instance.currentUser;
-                    final userData = {
-                      'bookCount': int.parse(_bookCountController.text),
-                      'bio': _bioController.text,
-                      'username': _usernameController.text,
-                      'imageUrl': _imageUrl,
-                    };
+  onPressed: () async {
+    if (_formKey.currentState!.validate()) {
+      // Guardar la información en Firestore
+      final user = FirebaseAuth.instance.currentUser;
+      final userData = {
+        'bookCount': int.parse(_bookCountController.text),
+        'bio': _bioController.text,
+        'displayname': _usernameController.text,
+        'isNewUser':false,
+      };
 
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(user as String?)
-                        .set(userData);
+      // Obtener el documento existente del usuario
+      final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid as String);
+      
+      // Actualizar solo los campos especificados en userData
+      await userDoc.update(userData);
 
-                    // Navegar de regreso
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Text('Completar'),
-              ),
+      // Navegar de regreso
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context) => const HomePage()));
+    }
+  },
+  child: Text('Completar'),
+),
             ],
           ),
         ),

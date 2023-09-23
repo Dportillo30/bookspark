@@ -211,6 +211,7 @@ class AuthenticationRepository {
         'email': userCredential.user!.email,
         'displayName': nickname,
         'createdAt': FieldValue.serverTimestamp(),
+        'isNewUser': true,
       });
     }
 
@@ -252,13 +253,18 @@ Future<User> logInWithGoogle() async {
         'email': user.email,
         'displayName': user.displayName,
         'createdAt': FieldValue.serverTimestamp(),
+        'isNewUser': true,
       });
     }
+
+
+    final isNewUser = userDoc.exists ? userDoc['isNewUser'] : false;
 
     // Return the User object
     return User(
       id: user.uid,
       email: user.email!,
+      isNew: isNewUser,
     );
   } on firebase_auth.FirebaseAuthException catch (e) {
     throw LogInWithGoogleFailure.fromCode(e.code);
@@ -303,7 +309,9 @@ Future<User> logInWithGoogle() async {
 }
 
 extension on firebase_auth.User {
+  
   User get toUser {
     return User(id: uid, email: email, name: displayName, photo: photoURL);
   }
 }
+
